@@ -15,7 +15,7 @@ import static com.company.StaticConstants.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         createCategory();
         createCustomer();
         createBalance();
@@ -46,8 +46,12 @@ public class Main {
                     }
                     break;
                 case 1:
-                    for (Product product : PRODUCT_LIST) {
-                        System.out.println("product name: " + product.getName() + "product category name: " + product.getCategoryName());
+                    try {
+                        for (Product product : PRODUCT_LIST) {
+                            System.out.println("product name: " + product.getName() + "product category name: " + product.getCategoryName());
+                        }
+                    }catch (Exception e){
+                        System.out.println("Product couldn't printed because category not found product id: " + e.getMessage().split(",")[1]);
                     }
                     break;
                 case 2:
@@ -85,31 +89,30 @@ public class Main {
                 case 5:
                     cart.setCustomerId(customer.getId());
                     Map<Product, Integer> map = new HashMap<>();
+                    cart.setProductMap(map);
                     while (true) {
                         System.out.println("which product you would like add your cart. For exit product selection Type : exit");
                         for (Product product : PRODUCT_LIST) {
                             System.out.println("id : " + product.getId() + " price: " + product.getPrice() + " product category" + product.getCategoryName() + "stock :" + product.getRemainingStock() + "product will be delivered due" + product.getDeliveryDueDate());
                         }
                         String productId = scanner.next();
-                        if (productId.equals("exit")) {
-                            break;
-                        }
-                        Product product = findProductById(productId);
-                        if (product != null) {
-                            System.out.println("Please provide product count: ");
-                            int count = scanner.nextInt();
-                            if (product.getRemainingStock() > count) {
-                                if (map.containsKey(product)) {
-                                    int itemCount = map.get(product);
-                                    map.put(product, itemCount + count);
-                                } else {
-                                    map.put(product, count);
-                                }
-                            } else {
+                        try {
+                            Product product = findProductById(productId);
+                            if (!putItemToCartIfStockAvailable(cart, product)){
                                 System.out.println("stock is insufficient. Please try again." +
                                         " Available stock is " + product.getRemainingStock());
+                                continue;
                             }
+                        }catch (Exception e){
+                            System.out.println("Product doesn't exist. Please try again.");
+                            continue;
                         }
+                        System.out.println("Do you want to add more product. Type Y for adding more, N for exit");
+                        String decision = scanner.next();
+                        if (!decision.equals("Y")){
+                            break;
+                        }
+
                     }
                     cart.setProductMap(map);
                     System.out.println("seems there are discount options. Do you want to see and apply to your cart if it is applicable. For no discount type no");
@@ -151,11 +154,34 @@ public class Main {
                     printOrdersByCustomerId(customer.getId());
                     break;
                 case 8:
+                    printOrdersByCustomerId(customer.getId());
+                    break;
+                case 9:
                     System.exit(1);
                     break;
             }
         }
     }
+
+    public static boolean putItemToCartIfStockAvailable(Cart cart, Product product){
+        System.out.println("Please provide product count: ");
+        Scanner scanner = new Scanner(System.in);
+        int count = scanner.nextInt();
+        Integer cartCount = cart.getProductMap().get(product);
+
+        if ((cartCount != null && product.getRemainingStock() >  cartCount + count )
+                ||  product.getRemainingStock() > count) {
+            if (cart.getProductMap().containsKey(product)) {
+                int itemCount = cart.getProductMap().get(product);
+                cart.getProductMap().put(product, itemCount + count);
+            } else {
+                cart.getProductMap().put(product, count);
+            }
+            return true;
+        }
+        return false;
+    }
+
     private static void printOrdersByCustomerId(UUID customerId){
         for (Order order : ORDER_LIST){
             if (order.getCustomerId().toString().equals(customerId.toString())){
@@ -179,13 +205,13 @@ public class Main {
         return null;
     }
 
-    private static Product findProductById(String productId) {
+    private static Product findProductById(String productId) throws Exception {
         for (Product product : PRODUCT_LIST) {
             if (product.getId().toString().equals(productId)) {
                 return product;
             }
         }
-        return null;
+        throw new Exception("Product Not Found");
     }
 
     private static CustomerBalance findCustomerBalance(UUID customerId) {

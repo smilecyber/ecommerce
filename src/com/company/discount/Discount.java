@@ -27,20 +27,7 @@ public abstract class Discount {
     public abstract Double calculateCartAmountAfterDiscountApplied(Double amount);
 
     public boolean decideDiscountIsApplicableToCart(Cart cart){
-        Set<Product> productList = cart.getProductMap().keySet();
-        double eligibleTotalProductAmount = 0d;
-        for (Product product : productList){
-            // multiply with quantity
-            if (applicableCategories != null && applicableCategories.size() > 0){
-                if (applicableCategories.contains(product.getCategoryName())){
-                    eligibleTotalProductAmount += (product.getPrice()
-                            * cart.getProductMap().get(product));
-                }
-            }else {
-                return cart.calculateCartTotalAmount() > thresholdAmount;
-            }
-        }
-        return eligibleTotalProductAmount > thresholdAmount;
+        return cart.calculateCartTotalAmount() > thresholdAmount;
     }
 
 

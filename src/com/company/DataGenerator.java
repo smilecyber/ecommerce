@@ -29,7 +29,7 @@ public class DataGenerator {
     }
 
     public static void createBalance() {
-        CustomerBalance customerBalance = new CustomerBalance(450d, CUSTOMER_LIST.get(0).getId());
+        CustomerBalance customerBalance = new CustomerBalance(650d, CUSTOMER_LIST.get(0).getId());
         CUSTOMER_BALANCE_LIST.add(customerBalance);
         GiftCardBalance giftCardBalance = new GiftCardBalance(550d, CUSTOMER_LIST.get(1).getId());
         GIFT_CARD_BALANCE_LIST.add(giftCardBalance);
@@ -51,12 +51,10 @@ public class DataGenerator {
         Product product1 = new Product(UUID.randomUUID(), "PS5", 230d, 250d, 7, 7, electronicCategory.getId());
         Product product2 = new Product(UUID.randomUUID(), "XBOX", 120d, 180d, 15, 15, electronicCategory.getId());
         Product product3 = new Product(UUID.randomUUID(), "Chair", 30d, 50d, 85, 85, furnitureCategory.getId());
-        Product product4 = new Product(UUID.randomUUID(), "Face Creme", 6d, 8d, 250, 250, skinCareCategory.getId());
 
         PRODUCT_LIST.add(product1);
         PRODUCT_LIST.add(product2);
         PRODUCT_LIST.add(product3);
-        PRODUCT_LIST.add(product4);
     }
 
     public static void createCustomer() {
@@ -67,6 +65,7 @@ public class DataGenerator {
         customer1AddressList.add(addressCustomer2);
         Customer customer1 = new Customer(UUID.randomUUID(), "email@email.com", "msmith", customer1AddressList);
         Customer customer2 = new Customer(UUID.randomUUID(), "email1@email.com", "jane");
+
         CUSTOMER_LIST.add(customer1);
         CUSTOMER_LIST.add(customer2);
     }

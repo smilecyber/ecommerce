@@ -20,24 +20,7 @@ import static com.company.StaticConstants.*;
 public class OrderServiceImpl implements OrderService{
     @Override
     public String placeOrder(Customer customer, Cart cart) {
-        List<Address> addressList = customer.getAddressList();
         Scanner scanner = new Scanner(System.in);
-        if (addressList.size() <= 0){
-            System.out.println("Address can not be found. Please provide an address.");
-            System.out.println("Name: ");
-            String name = scanner.next();
-            System.out.println("Street: ");
-            String street = scanner.next();
-            System.out.println("zipCode: ");
-            String zipCode = scanner.next();
-            System.out.println("additionalAddressLine: ");
-            String additionalAddressLine = scanner.next();
-            System.out.println("Region: ");
-            String region = scanner.next();
-            Address address = new Address(name, street, zipCode ,additionalAddressLine, region);
-            customer.getAddressList().add(address);
-            ADDRESS_LIST.add(address);
-        }
         double amountAfterDiscount = cart.calculateCartTotalAmount();
 
         if (cart.getDiscountId() != null){

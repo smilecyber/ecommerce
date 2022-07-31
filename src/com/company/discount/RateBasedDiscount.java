@@ -25,7 +25,7 @@ public class RateBasedDiscount extends Discount{
         return amount - (amount * getDiscountRate() / 100);
     }
 
-    public Double calculateCartAmountAfterDiscountApplied(Double amount, Map<Product, Integer> productMap) {
+    public Double calculateCartAmountAfterDiscountApplied(Double amount, Map<Product, Integer> productMap) throws Exception {
         Set<Product> productList = productMap.keySet();
         double eligibleTotalProductAmount = 0d;
         for (Product product : productList){

@@ -74,15 +74,13 @@ public class Product {
         this.categoryId = categoryId;
     }
 
-    public String getCategoryName() {
+    public String getCategoryName() throws Exception {
         for (Category category : CATEGORY_LIST){
             if (getCategoryId().toString().equals(category.getId().toString())){
                 return category.getName();
             }
         }
-        // should we show the students ?
-        //throw new Exception("Category not found");
-        return null;
+        throw new Exception("Category not found, " + getId());
     }
 
     public LocalDateTime getDeliveryDueDate() {
