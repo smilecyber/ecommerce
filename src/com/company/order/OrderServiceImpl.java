@@ -20,7 +20,6 @@ import static com.company.StaticConstants.*;
 public class OrderServiceImpl implements OrderService{
     @Override
     public String placeOrder(Customer customer, Cart cart) {
-        Scanner scanner = new Scanner(System.in);
         double amountAfterDiscount = cart.calculateCartTotalAmount();
 
         if (cart.getDiscountId() != null){
@@ -28,6 +27,7 @@ public class OrderServiceImpl implements OrderService{
             amountAfterDiscount = discount.calculateCartAmountAfterDiscountApplied(amountAfterDiscount);
         }
 
+        Scanner scanner = new Scanner(System.in);
         System.out.println("which payment option you would like to choose, Type 1 : customer balance, Type 2 : Mix (gift card + customer balance)");
         int paymentType = scanner.nextInt();
         boolean checkoutResult = false;
