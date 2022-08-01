@@ -5,17 +5,16 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Cart {
-    private UUID customerId;
+    private Customer customer;
     private UUID discountId;
     private Map<Product, Integer> productMap;
 
-    public Cart( UUID customerId) {
-        this.customerId = customerId;
+    public Cart(Customer customer) {
+        this.customer = customer;
     }
 
-    public Cart(UUID customerId, UUID discountId, Map<Product, Integer> productMap) {
-
-        this(customerId);
+    public Cart(Customer customer, UUID discountId, Map<Product, Integer> productMap) {
+        this(customer);
         this.discountId = discountId;
         this.productMap = productMap;
     }
@@ -26,14 +25,6 @@ public class Cart {
             totalAmount += product.getPrice() * productMap.get(product);
         }
         return totalAmount;
-    }
-
-    public UUID getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(UUID customerId) {
-        this.customerId = customerId;
     }
 
     public UUID getDiscountId() {
@@ -50,5 +41,13 @@ public class Cart {
 
     public void setProductMap(Map<Product, Integer> productMap) {
         this.productMap = productMap;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }

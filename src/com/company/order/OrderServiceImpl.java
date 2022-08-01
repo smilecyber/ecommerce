@@ -19,12 +19,16 @@ import static com.company.StaticConstants.*;
 
 public class OrderServiceImpl implements OrderService{
     @Override
-    public String placeOrder(Customer customer, Cart cart) {
+    public String placeOrder(Cart cart) {
         double amountAfterDiscount = cart.calculateCartTotalAmount();
 
         if (cart.getDiscountId() != null){
-            Discount discount = findDiscountById(cart.getDiscountId());
-            amountAfterDiscount = discount.calculateCartAmountAfterDiscountApplied(amountAfterDiscount);
+            try {
+                Discount discount = findDiscountById(cart.getDiscountId());
+                amountAfterDiscount = discount.calculateCartAmountAfterDiscountApplied(amountAfterDiscount);
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         }
 
         Scanner scanner = new Scanner(System.in);
@@ -34,11 +38,11 @@ public class OrderServiceImpl implements OrderService{
         switch (paymentType){
             case 1:
                 CheckoutService customerBalanceCheckoutService = new CustomerBalanceCheckoutServiceImpl();
-                checkoutResult = customerBalanceCheckoutService.checkout(customer, amountAfterDiscount);
+                checkoutResult = customerBalanceCheckoutService.checkout(cart.getCustomer(), amountAfterDiscount);
                 break;
             case 2:
                 CheckoutService mixPaymentCheckoutService = new MixPaymentCheckoutServiceImpl();
-                checkoutResult = mixPaymentCheckoutService.checkout(customer, amountAfterDiscount);
+                checkoutResult = mixPaymentCheckoutService.checkout(cart.getCustomer(), amountAfterDiscount);
                 break;
         }
 
@@ -46,7 +50,7 @@ public class OrderServiceImpl implements OrderService{
         if (checkoutResult){
             Order order = new Order(UUID.randomUUID(), LocalDateTime.now(),
                     cart.calculateCartTotalAmount(), amountAfterDiscount,
-                    cart.calculateCartTotalAmount() - amountAfterDiscount, customer.getId()
+                    cart.calculateCartTotalAmount() - amountAfterDiscount, cart.getCustomer().getId()
                     , "Placed", cart.getProductMap().keySet());
             ORDER_LIST.add(order);
             return "Order has been placed successfully";
@@ -55,12 +59,12 @@ public class OrderServiceImpl implements OrderService{
         }
     }
 
-    private Discount findDiscountById(UUID discountId){
+    private Discount findDiscountById(UUID discountId) throws Exception {
         for (Discount discount : DISCOUNT_LIST){
             if (discount.getId().toString().equals(discountId.toString())){
                 return discount;
             }
         }
-        return null;
+        throw new Exception("Discount couldn't found");
     }
 }

@@ -89,9 +89,7 @@ public class Product {
                 return category.findDeliveryDueDate();
             }
         }
-        // should we show the students ?
-        //throw new Exception("Category not found");
-        return null;
+        throw new Exception("")
     }
 
     public String getCategoryCode() {
