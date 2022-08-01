@@ -83,13 +83,13 @@ public class Product {
         throw new Exception("Category not found, " + getId());
     }
 
-    public LocalDateTime getDeliveryDueDate() {
+    public LocalDateTime getDeliveryDueDate() throws Exception {
         for (Category category : CATEGORY_LIST){
             if (getCategoryId().toString().equals(category.getId().toString())){
                 return category.findDeliveryDueDate();
             }
         }
-        throw new Exception("")
+        throw new Exception("Category couldn't found");
     }
 
     public String getCategoryCode() {
